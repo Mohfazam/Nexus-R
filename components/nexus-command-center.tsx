@@ -1,8 +1,10 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { Crosshair, Radio, Route, Satellite, Send, ShieldAlert } from 'lucide-react'
 
 type Stage = 'brief' | 'scan' | 'triage' | 'dispatch' | 'report'
+type MapMode = 'all' | 'signals' | 'routes' | 'comms' | 'risk'
 
 const stages: { id: Stage; label: string; title: string }[] = [
   { id: 'brief', label: '01', title: 'Incident brief' },
@@ -54,6 +56,8 @@ export default function NexusCommandCenter() {
   const [selectedDrone, setSelectedDrone] = useState(missions[0])
   const [now, setNow] = useState(new Date('2026-09-05T09:47:32Z'))
   const [exported, setExported] = useState(false)
+  const [mapMode, setMapMode] = useState<MapMode>('all')
+  const [activeAction, setActiveAction] = useState('')
 
   useEffect(() => {
     const timer = window.setInterval(() => setNow((value) => new Date(value.getTime() + 1000)), 1000)
