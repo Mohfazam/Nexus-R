@@ -170,6 +170,12 @@ function ReportDocument({ time, exported, onExport }: { time: string; exported: 
       <div><span>ASSETS USED</span><b>DR-042</b><small>DR-041 staged as failover</small></div>
     </div>
 
+    <section className="report-infographic evidence-board" aria-label="Evidence confidence overview">
+      <div className="confidence-gauge"><div><b>94</b><span>FUSED<br />SCORE</span></div></div>
+      <div className="signal-bars"><span className="eyebrow">P1 · EVIDENCE CONTRIBUTION</span><div><b>RGB</b><i><em style={{ width: '92%' }} /></i><strong>92</strong></div><div><b>THERMAL</b><i><em style={{ width: '96%' }} /></i><strong>96</strong></div><div><b>MOVEMENT</b><i><em style={{ width: '71%' }} /></i><strong>71</strong></div><div><b>DEVICE</b><i><em className="supporting-bar" style={{ width: '38%' }} /></i><strong>38</strong></div></div>
+      <div className="evidence-status"><span>DECISION STATE</span><b>PRIORITY REVIEW</b><small>Human confirmation required</small><div className="status-pulse" /></div>
+    </section>
+
     <section className="report-section">
       <span className="eyebrow">01 · OPERATIONAL OUTCOME</span>
       <h3>What the field needs to know now</h3>
@@ -212,6 +218,7 @@ function ReportDocument({ time, exported, onExport }: { time: string; exported: 
         <div><span>02 AERIAL MESH</span><b>Active · DR-042 relay</b><p>Drones formed an aerial relay so evidence packets still reached the command picture.</p></div>
         <div><span>03 SATELLITE BACKHAUL</span><b>Ground gateway ready</b><p>If the mesh saturates, a ground gateway can use satellite connectivity to keep the control room in the loop.</p></div>
       </div>
+      <div className="comms-flow"><span className="comms-node offline">CELL</span><i /><span className="comms-node active">DR-042<br /><small>MESH</small></span><i /><span className="comms-node ready">GATEWAY<br /><small>SAT</small></span><i /><span className="comms-node command">CONTROL<br /><small>ROOM</small></span></div>
     </section>
 
     <section className="report-section">
@@ -239,6 +246,7 @@ function ReportDocument({ time, exported, onExport }: { time: string; exported: 
           <p>The shared dashboard ranked P1, assigned Bravo 2, and retained the audit trail for the district control room.</p>
         </div>
       </div>
+      <div className="compute-graphic"><div><span>EDGE</span><b>04:18</b><small>Inference · cache · geotag</small><i><em style={{ width: '82%' }} /></i></div><div className="compute-arrow">→</div><div><span>CENTRAL</span><b>LIVE</b><small>Fleet · history · dispatch</small><i><em className="central-bar" style={{ width: '64%' }} /></i></div></div>
     </section>
 
     <section className="report-section">
