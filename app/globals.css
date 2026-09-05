@@ -125,3 +125,17 @@ button { color: inherit; font: inherit; cursor: pointer; }
 .confidence-ring span { color: #ffad9c; }.keepout-zone { border-color: #f0b85c; background: #f0b85c18; }.keepout-zone span { color: #f3c878; }
 .coverage-cone { border-color: #7aa5c48c; background: #7aa5c414; }.coverage-cone span { color: #9cc6e2; }
 @media (max-width: 720px) { .map-hud { top: 10px; left: 10px; padding: 8px 10px; }.map-hud b { font-size: 10px; }.map-hud small { display: none; }.map-compass { top: 11px; right: 58px; }.map-tools { right: 10px; bottom: 45px; }.map-feature-stack { top: 55px; right: 10px; } }
+.map-control-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 8px 12px; background: #edf2eb; border-bottom: 1px solid var(--line); }
+.map-mode-tools, .map-action-tools { display: flex; gap: 4px; }
+.map-action-tools { margin-left: auto; padding-left: 10px; border-left: 1px solid var(--line); }
+.map-control-bar button { width: 30px; height: 30px; display: grid; place-items: center; padding: 0; border: 1px solid #c7d3cb; background: #fbfcf7; color: #607570; }
+.map-control-bar button:hover, .map-control-bar button.selected { border-color: var(--teal); background: var(--teal); color: white; }
+.map-signals .map-road, .map-signals .map-buildings, .map-signals .map-water, .map-signals .coverage-cone, .map-signals .keepout-zone { opacity: .18; }
+.map-signals .confidence-ring, .map-signals .survivor-marker { transform: scale(1.08); }
+.map-routes .map-water, .map-routes .map-buildings, .map-routes .confidence-ring, .map-routes .keepout-zone { opacity: .18; }
+.map-routes .flight-path, .map-routes .coverage-cone { opacity: 1; }
+.map-comms .map-road, .map-comms .map-buildings, .map-comms .confidence-ring, .map-comms .keepout-zone { opacity: .18; }
+.map-comms .mesh-link { height: 2px; border-top-style: solid; box-shadow: 0 0 8px #80699a; }
+.map-risk .map-road, .map-risk .map-buildings, .map-risk .map-water, .map-risk .flight-path, .map-risk .coverage-cone { opacity: .18; }
+.map-risk .keepout-zone, .map-risk .hazard-marker { transform: scale(1.1); }
+@media (max-width: 720px) { .map-control-bar { padding: 7px 9px; }.map-control-bar button { width: 28px; height: 28px; }.map-action-tools { padding-left: 7px; } }
