@@ -81,7 +81,7 @@ export default function NexusCommandCenter() {
   return <main className="nexus-app">
     <header className="topbar">
       <div className="brand"><span className="brand-mark">N</span><div><strong>NEXUS-R</strong><small>DISASTER RESPONSE INTELLIGENCE LAYER</small></div></div>
-      <div className="topbar-status"><span className="live-dot" /> LIVE INCIDENT <i /> OFFLINE-FIRST AI <i /> 09:47:32 IST</div>
+      <div className="topbar-status"><span className="live-dot" /> LIVE INCIDENT <i /> OFFLINE-FIRST AI <i /> {time} IST</div>
       <div className="operator"><span>SA</span><div><b>Sarwar</b><small>FLIGHT OPERATIONS LEAD</small></div></div>
     </header>
 
