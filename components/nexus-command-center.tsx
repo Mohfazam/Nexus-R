@@ -104,7 +104,8 @@ export default function NexusCommandCenter() {
 
         <div className={stage === 'report' ? 'demo-grid report-mode' : 'demo-grid'}>
           {stage !== 'report' && <>
-            <section className="map-card">
+            <section className={`map-card map-${mapMode}`}>
+              <MapControlBar mapMode={mapMode} setMapMode={setMapMode} activeAction={activeAction} setActiveAction={setActiveAction} />
               <div className="card-head"><div><span className="eyebrow">LIVE GEO-TAGGED OPERATING PICTURE</span><h2>Ward 14 · Bengaluru</h2></div><button className="ghost-button">Layers · 04 active</button></div>
               <div className="map-canvas"><div className="map-hud"><span>LIVE SEARCH GRID</span><b>WARD 14 / 2.4 KM²</b><small>UPDATED {time} · GPS + SLAM FUSION</small></div><div className="map-tools" aria-label="Map tools"><button type="button">+</button><button type="button">−</button><button type="button">⌖</button></div><div className="map-compass">N</div><div className="map-water water-one" /><div className="map-water water-two" /><div className="map-road map-road-one" /><div className="map-road map-road-two" /><div className="map-road map-road-three" /><div className="map-buildings buildings-one" /><div className="map-buildings buildings-two" /><div className="map-buildings buildings-three" /><div className="search-zone"><span>SEARCH ZONE · 1.8 ha</span></div><div className="flight-path"><span className="path-point one" /><span className="path-point two" /><span className="path-point three" /><span className="path-point four" /></div><div className="mesh-link mesh-link-one" /><div className="mesh-link mesh-link-two" /><div className="confidence-ring"><span>94% FUSED</span></div><div className="keepout-zone"><span>35 m KEEP-OUT</span></div><div className="coverage-cone"><span>FAILOVER COVERAGE</span></div><MapMarker label="DR-042" className="drone-marker marker-one" /><MapMarker label="DR-041" className="drone-marker marker-two" muted /><MapMarker label="P1" className="survivor-marker survivor-one" /><MapMarker label="H1" className="hazard-marker hazard-one" /><div className="map-feature-stack"><span><i className="feature-signal" /> multimodal signal</span><span><i className="feature-mesh" /> aerial relay</span><span><i className="feature-route" /> safe route</span></div><div className="map-label label-lake">BELLANDUR LAKE</div><div className="map-label label-ward">WARD 14</div><div className="map-label label-road">OUTER RING ROAD</div><div className="map-legend"><span><i className="legend-drone" /> drone</span><span><i className="legend-survivor" /> survivor</span><span><i className="legend-hazard" /> hazard</span><span><i className="legend-zone" /> search zone</span></div></div>
               <div className="map-footer"><span>ON-DEVICE MAP · GPS + SLAM FUSION</span><span>UPDATED {time} · 1.2 m ACCURACY</span></div>
@@ -275,3 +276,20 @@ function ReportDocument({ time, exported, onExport }: { time: string; exported: 
 
 function MapMarker({ label, className, muted = false }: { label: string; className: string; muted?: boolean }) { return <div className={`${className} ${muted ? 'muted-marker' : ''}`}><span>{label}</span></div> }
 function TopologyNode({ label, title, tone, active = false }: { label: string; title: string; tone: string; active?: boolean }) { return <div className={`topology-node ${tone} ${active ? 'active' : ''}`}><span>{label}</span><b>{title}</b>{active && <i>LIVE</i>}</div> }
+
+function MapControlBar({ mapMode, setMapMode, activeAction, setActiveAction }: { mapMode: MapMode; setMapMode: (mode: MapMode) => void; activeAction: string; setActiveAction: (action: string) => void }) {
+  return <div className="map-control-bar">
+    <div className="map-mode-tools" aria-label="Map focus modes">
+      <button type="button" className={mapMode === 'all' ? 'selected' : ''} onClick={() => setMapMode('all')} title="All layers" aria-label="Show all map layers"><Crosshair size={15} /></button>
+      <button type="button" className={mapMode === 'signals' ? 'selected' : ''} onClick={() => setMapMode('signals')} title="Evidence signals" aria-label="Show evidence signals"><Radio size={15} /></button>
+      <button type="button" className={mapMode === 'routes' ? 'selected' : ''} onClick={() => setMapMode('routes')} title="Safe routes" aria-label="Show safe routes"><Route size={15} /></button>
+      <button type="button" className={mapMode === 'comms' ? 'selected' : ''} onClick={() => setMapMode('comms')} title="Communication links" aria-label="Show communication links"><Satellite size={15} /></button>
+      <button type="button" className={mapMode === 'risk' ? 'selected' : ''} onClick={() => setMapMode('risk')} title="Hazard zones" aria-label="Show hazard zones"><ShieldAlert size={15} /></button>
+    </div>
+    <div className="map-action-tools" aria-label="Response actions">
+      <button type="button" className={activeAction === 'broadcast' ? 'selected' : ''} onClick={() => setActiveAction('broadcast')} title="Broadcast responder alert" aria-label="Broadcast responder alert"><Send size={15} /></button>
+      <button type="button" className={activeAction === 'relay' ? 'selected' : ''} onClick={() => setActiveAction('relay')} title="Activate satellite fallback" aria-label="Activate satellite fallback"><Satellite size={15} /></button>
+      <button type="button" className={activeAction === 'hazard' ? 'selected' : ''} onClick={() => setActiveAction('hazard')} title="Mark hazard" aria-label="Mark hazard"><ShieldAlert size={15} /></button>
+    </div>
+  </div>
+}
