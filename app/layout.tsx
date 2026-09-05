@@ -3,8 +3,8 @@ import type { Metadata, Viewport } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'NEXUS-R | Emergency Response System',
-  description: 'Simulated emergency response command center for coordinated field operations.',
+  title: 'NEXUS-R | Autonomous Aerial Response',
+  description: 'Edge-AI drone command center for search, rescue, and disaster hazard detection.',
   generator: 'v0.app',
 }
 
