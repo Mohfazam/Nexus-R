@@ -12,6 +12,14 @@ const stages: { id: Stage; label: string; title: string }[] = [
   { id: 'report', label: '05', title: 'Situation report' },
 ]
 
+const stageGuides: Record<Stage, { label: string; cue: string }> = {
+  brief: { label: 'MISSION OBJECTIVE · DEFINE THE PROBLEM', cue: 'Establish the search area and keep responders out of an unverified danger zone.' },
+  scan: { label: 'MISSION OBJECTIVE · SEARCH WITHOUT A PILOT', cue: 'Maintain autonomous coverage when GPS and cellular connectivity are unreliable.' },
+  triage: { label: 'MISSION OBJECTIVE · TURN PIXELS INTO PRIORITY', cue: 'Rank the survivor signal ahead of hazard and route findings for immediate review.' },
+  dispatch: { label: 'MISSION OBJECTIVE · MAKE THE HANDOFF ACTIONABLE', cue: 'Send coordinates, a safe route, and the hazard warning in one responder handoff.' },
+  report: { label: 'MISSION OUTCOME · SAVE RESPONDER TIME', cue: 'Record the verified survivor, marked hazards, and the recommended access route.' },
+}
+
 const missions = [
   { id: 'DR-042', title: 'North sector survivor sweep', location: 'Bengaluru · Ward 14', status: 'IN FLIGHT', battery: '78%', signal: '98%', altitude: '42 m' },
   { id: 'DR-041', title: 'Flood corridor scan', location: 'Bengaluru · Bellandur Lake', status: 'STAGED', battery: '96%', signal: '100%', altitude: '0 m' },
@@ -37,6 +45,8 @@ export default function NexusCommandCenter() {
   const time = now.toISOString().slice(11, 19)
   const stageIndex = stages.findIndex((item) => item.id === stage)
   const advance = () => setStage(stages[Math.min(stageIndex + 1, stages.length - 1)].id)
+  const retreat = () => setStage(stages[Math.max(stageIndex - 1, 0)].id)
+  const restart = () => setStage('brief')
 
   return <main className="nexus-app">
     <header className="topbar">
@@ -49,19 +59,20 @@ export default function NexusCommandCenter() {
       <aside className="left-rail">
         <div className="incident-card"><span className="eyebrow">ACTIVE RESPONSE</span><strong>INC-2026-0905</strong><p>Urban flood and structural collapse<br />Bengaluru, Karnataka</p><span className="incident-status">● PRIORITY RESPONSE</span></div>
         <div className="rail-label">MISSION FLOW</div>
-        <nav className="flow-nav">{stages.map((item, index) => <button key={item.id} className={stage === item.id ? 'flow-item active' : index < stageIndex ? 'flow-item done' : 'flow-item'} onClick={() => setStage(item.id)}><span>{index < stageIndex ? '✓' : item.label}</span><b>{item.title}</b>{stage === item.id && <i />}</button>)}</nav>
+        <nav className="flow-nav">{stages.map((item, index) => <button key={item.id} disabled={index > stageIndex} className={stage === item.id ? 'flow-item active' : index < stageIndex ? 'flow-item done' : 'flow-item'} onClick={() => setStage(item.id)}><span>{index < stageIndex ? '✓' : item.label}</span><b>{item.title}</b>{stage === item.id && <i />}</button>)}</nav>
         <div className="rail-footer"><span className="eyebrow">EDGE SYSTEM</span><p><span className="health-dot" /> 3 drones connected</p><p><span className="health-dot" /> Mesh relay stable</p><small>Last sync 12 sec ago</small></div>
       </aside>
 
       <section className="workspace">
         <div className="workspace-head"><div><span className="eyebrow">NEXUS-R / AUTONOMOUS SEARCH AND RESCUE</span><h1>{stages[stageIndex].title}</h1><p>{stage === 'brief' ? 'Turn aerial intelligence into a rescue decision in under five minutes.' : stage === 'scan' ? 'Aquila-07 is building a live map while its onboard model searches for people and hazards.' : stage === 'triage' ? 'Review detections ranked by urgency before sending people into the incident zone.' : stage === 'dispatch' ? 'Send a precise handoff to the nearest response team with route risk included.' : 'A field-ready summary is assembled from verified drone evidence.'}</p></div><div className="incident-clock"><span>INCIDENT CLOCK</span><b>{time}</b><small>IST · CONNECTED VIA MESH</small></div></div>
-        <div className="flow-progress">{stages.map((item, index) => <div key={item.id} className={index <= stageIndex ? 'progress-step reached' : 'progress-step'}><span>{item.label}</span><b>{item.title}</b></div>)}</div>
+        <div className="flow-progress">{stages.map((item, index) => <div key={item.id} className={index <= stageIndex ? 'progress-step reached' : 'progress-step'}><span>{index < stageIndex ? '✓' : item.label}</span><b>{item.title}</b></div>)}</div>
 
         <div className="demo-grid">
           <section className="map-card">
             <div className="card-head"><div><span className="eyebrow">LIVE GEO-TAGGED OPERATING PICTURE</span><h2>Ward 14 · Bengaluru</h2></div><button className="ghost-button">Satellite + street ▾</button></div>
             <div className="map-canvas"><div className="map-water water-one" /><div className="map-water water-two" /><div className="map-road map-road-one" /><div className="map-road map-road-two" /><div className="map-road map-road-three" /><div className="map-buildings buildings-one" /><div className="map-buildings buildings-two" /><div className="map-buildings buildings-three" /><div className="search-zone"><span>SEARCH ZONE · 1.8 ha</span></div><div className="flight-path"><span className="path-point one" /><span className="path-point two" /><span className="path-point three" /><span className="path-point four" /></div><MapMarker label="DR-042" className="drone-marker marker-one" /><MapMarker label="DR-041" className="drone-marker marker-two" muted /><MapMarker label="P1" className="survivor-marker survivor-one" /><MapMarker label="H1" className="hazard-marker hazard-one" /><div className="map-label label-lake">BELLANDUR LAKE</div><div className="map-label label-ward">WARD 14</div><div className="map-label label-road">OUTER RING ROAD</div><div className="map-legend"><span><i className="legend-drone" /> drone</span><span><i className="legend-survivor" /> survivor</span><span><i className="legend-hazard" /> hazard</span><span><i className="legend-zone" /> search zone</span></div></div>
             <div className="map-footer"><span>ON-DEVICE MAP · GPS + SLAM FUSION</span><span>UPDATED {time} · 1.2 m ACCURACY</span></div>
+            <div className="map-reading"><div><span className="map-reading-icon survivor-read">P1</span><p><b>Survivor signal</b><small>Grid B-07 · 94% confidence</small></p></div><div><span className="map-reading-icon hazard-read">H1</span><p><b>Keep-out hazard</b><small>East facade · 35 m standoff</small></p></div><div><span className="map-reading-icon route-read">→</span><p><b>Recommended approach</b><small>Service lane · flood-safe</small></p></div></div>
           </section>
 
           <section className="control-card">
@@ -71,8 +82,10 @@ export default function NexusCommandCenter() {
             {stage === 'dispatch' && <DispatchPanel advance={advance} />}
             {stage === 'report' && <ReportPanel />}
           </section>
+          <div className="demo-controls"><div><span>{stageGuides[stage].label}</span><p>{stageGuides[stage].cue}</p></div><div className="demo-buttons"><button className="secondary-action" onClick={retreat} disabled={stageIndex === 0}>← Back</button>{stageIndex < stages.length - 1 ? <button className="secondary-action continue-action" onClick={advance}>Continue →</button> : <button className="secondary-action continue-action" onClick={restart}>Replay demo ↻</button>}</div></div>
         </div>
 
+        <section className="ai-console"><div className="card-head compact"><div><span className="eyebrow">ON-DEVICE INTELLIGENCE</span><h2>AI mission stack</h2></div><span className="ai-live"><i /> INFERENCE ACTIVE</span></div><div className="ai-feature-grid"><div className="ai-feature"><span className="ai-feature-icon">◎</span><div><b>Survivor detection</b><p>Thermal + RGB fusion finds people through low visibility.</p></div><strong>94%</strong></div><div className="ai-feature"><span className="ai-feature-icon warning-icon">△</span><div><b>Hazard classification</b><p>Flags collapse risk, floodwater, smoke, and unsafe access.</p></div><strong>89%</strong></div><div className="ai-feature"><span className="ai-feature-icon route-icon">⌁</span><div><b>Autonomous navigation</b><p>Visual SLAM holds the flight path when GPS drops.</p></div><strong>98%</strong></div><div className="ai-feature"><span className="ai-feature-icon mesh-icon">◌</span><div><b>Offline resilience</b><p>Evidence stays on-device and syncs over the mesh relay.</p></div><strong>ONLINE</strong></div></div></section>
         <div className="support-grid"><section className="telemetry-card"><div className="card-head compact"><div><span className="eyebrow">FLEET TELEMETRY</span><h2>Connected assets</h2></div><span className="count-badge">03 ONLINE</span></div>{missions.map((mission) => <button key={mission.id} className={selectedDrone.id === mission.id ? 'drone-row selected' : 'drone-row'} onClick={() => setSelectedDrone(mission)}><span className="drone-icon">✦</span><div><b>{mission.id} · {mission.title}</b><small>{mission.location}</small></div><span className="drone-state">{mission.status}</span><span className="drone-battery">{mission.battery}</span></button>)}</section><section className="activity-card"><div className="card-head compact"><div><span className="eyebrow">WHY NEXUS-R</span><h2>Decision trace</h2></div><span className="confidence">AI CONFIDENCE 94%</span></div><div className="trace-row"><b>01</b><span>RGB + thermal frames fused locally</span><time>09:47:14</time></div><div className="trace-row"><b>02</b><span>Survivor ranked above hazard alerts</span><time>09:47:09</time></div><div className="trace-row"><b>03</b><span>Safe route calculated for Team Kavya</span><time>09:46:52</time></div></section></div>
         <footer className="app-footer"><span>NEXUS-R · AUTONOMOUS AERIAL RESPONSE FOR DISASTER TEAMS</span><span>BUILD 1.1 · AUDIT TRAIL ENABLED</span></footer>
       </section>
